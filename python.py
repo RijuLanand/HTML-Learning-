@@ -1,47 +1,26 @@
-# Import necessary libraries
-import streamlit as st
-import yfinance as yf
-import pandas as pd
-import matplotlib.pyplot as plt
+import pygame
+import random
 
-# Streamlit setup
-st.title('Stock Market Analysis')
+# Initialize pygame
+pygame.init()
 
-# Sidebar for user input
-st.sidebar.header('Enter Stock Ticker')
-ticker = st.sidebar.text_input("Enter a valid stock ticker (e.g., AAPL for Apple):")
+# Constants
+WIDTH, HEIGHT = 800, 600
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+BALL_RADIUS = 10
+PADDLE_WIDTH, PADDLE_HEIGHT = 10, 100
+FPS = 60
 
-# Function to retrieve stock data
-def get_stock_data(ticker, start_date, end_date):
-    stock = yf.Ticker(ticker)
-    data = stock.history(start=start_date, end=end_date)
-    return data
+# Create the display surface
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Ping Pong")
 
-# Main content
-if ticker:
-    st.subheader('Stock Data')
-    
-    # Retrieve data
-    try:
-        stock_data = get_stock_data(ticker, '2020-01-01', '2024-01-01')
-        
-        # Display data
-        st.write(stock_data)
-        
-        # Plot closing price
-        st.subheader('Closing Price')
-        plt.figure(figsize=(10, 6))
-        plt.plot(stock_data['Close'])
-        plt.xlabel('Date')
-        plt.ylabel('Closing Price ($)')
-        plt.title(f'{ticker} Closing Price')
-        st.pyplot()
+# Create the ball
+ball = pygame.Rect(WIDTH // 2 - BALL_RADIUS // 2, HEIGHT // 2 - BALL_RADIUS // 2, BALL_RADIUS, BALL_RADIUS)
+ball_speed_x = 7 * random.choice((1, -1))
+ball_speed_y = 7 * random.choice((1, -1))
 
-        # Simple analysis
-        st.subheader('Simple Analysis')
-        st.write(f"Maximum Closing Price: {stock_data['Close'].max()}")
-        st.write(f"Minimum Closing Price: {stock_data['Close'].min()}")
-        st.write(f"Mean Closing Price: {stock_data['Close'].mean()}")
-        
-    except Exception as e:
-        st.error(f"Error: {e}")
+# Create paddles
+player_paddle = pygame.Rect(WIDTH - PADDLE_WIDTH, HEIGHT // 2 - PADDLE_HEIGHT // 2, PADDLE_WIDTH, PADDLE_HEIGHT)
+opponent_pa
